@@ -40,6 +40,18 @@ def add_solidify_modifier(mesh_object: bpy.types.Object,
 
     modifier.shell_vertex_group = shell_vertex_group
     modifier.rim_vertex_group = rim_vertex_group
+
+
+# https://docs.blender.org/api/current/bpy.types.VertexGroups.html
+# https://docs.blender.org/api/current/bpy.types.VertexGroup.html
+def add_vertex_group(mesh_object: bpy.types.Object, name: str = "Group") -> bpy.types.VertexGroup:
+
+    # TODO: Check whether the object has a mesh data
+    # TODO: Check whether the object already has a vertex group with the specified name
+
+    vertex_group = mesh_object.vertex_groups.new(name=name)
+
+    return vertex_group
 # ------------------------------------------------------------------------------
 
 
@@ -52,7 +64,11 @@ class BTOON_OP_SetContour(bpy.types.Operator):
 
     def execute(self, context: bpy.types.Context):
 
-        add_solidify_modifier(bpy.context.object, -0.01, True, False, 1, "Contour", "")
+        contour_group_name = "Contour"
+        object = bpy.context.object
+
+        add_vertex_group(object, contour_group_name)
+        add_solidify_modifier(object, -0.01, True, False, 1, shell_vertex_group=contour_group_name)
 
         self.report({'INFO'}, "Set contour.")
         return {'FINISHED'}
