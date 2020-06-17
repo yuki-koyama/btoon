@@ -19,6 +19,28 @@ bl_info = {
 # Copied from blender-cli-rendering:
 # https://github.com/yuki-koyama/blender-cli-rendering
 # ------------------------------------------------------------------------------
+def clean_nodes(nodes: bpy.types.Nodes) -> None:
+    for node in nodes:
+        nodes.remove(node)
+
+
+def add_material(name: str = "Material", use_nodes: bool = False, make_node_tree_empty: bool = False) -> bpy.types.Material:
+    '''
+    https://docs.blender.org/api/current/bpy.types.BlendDataMaterials.html
+    https://docs.blender.org/api/current/bpy.types.Material.html
+    '''
+
+    # TODO: Check whether the name is already used or not
+
+    material = bpy.data.materials.new(name)
+    material.use_nodes = use_nodes
+
+    if use_nodes and make_node_tree_empty:
+        clean_nodes(material.node_tree.nodes)
+
+    return material
+
+
 # https://docs.blender.org/api/current/bpy.types.SolidifyModifier.html
 def add_solidify_modifier(mesh_object: bpy.types.Object,
                           thickness: float = 0.01,
@@ -64,11 +86,23 @@ class BTOON_OP_SetContour(bpy.types.Operator):
 
     def execute(self, context: bpy.types.Context):
 
+        mat_name = "BToon Contour"
+        mat = None
+        if mat_name in bpy.data.materials:
+            print("BToon: Skip the material creation process.")
+            mat = bpy.data.materials[mat_name]
+        else:
+            mat = add_material(mat_name, use_nodes=True)
+            mat.use_backface_culling = True
+        assert mat is not None
+
         contour_group_name = "Contour"
         object = bpy.context.object
 
         add_vertex_group(object, contour_group_name)
         add_solidify_modifier(object, -0.01, True, False, 1, shell_vertex_group=contour_group_name)
+
+        object.data.materials.append(mat)
 
         self.report({'INFO'}, "Set contour.")
         return {'FINISHED'}
