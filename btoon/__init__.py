@@ -89,7 +89,7 @@ class BTOON_OP_SetContour(bpy.types.Operator):
         contour_group_name = "Contour"
         mat_name = "BToon Contour"
 
-        if not bpy.context.selected_objects:
+        if not context.selected_objects:
             self.report({'INFO'}, "No objects are selected.")
 
             return {'FINISHED'}
@@ -103,7 +103,7 @@ class BTOON_OP_SetContour(bpy.types.Operator):
             mat.use_backface_culling = True
         assert mat is not None
 
-        for object in bpy.context.selected_objects:
+        for object in context.selected_objects:
             add_vertex_group(object, contour_group_name)
             add_solidify_modifier(object, -0.01, True, False, 1, shell_vertex_group=contour_group_name)
 
