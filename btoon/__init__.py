@@ -86,7 +86,14 @@ class BTOON_OP_SetContour(bpy.types.Operator):
 
     def execute(self, context: bpy.types.Context):
 
+        contour_group_name = "Contour"
         mat_name = "BToon Contour"
+
+        if not bpy.context.selected_objects:
+            self.report({'INFO'}, "No objects are selected.")
+
+            return {'FINISHED'}
+
         mat = None
         if mat_name in bpy.data.materials:
             print("BToon: Skip the material creation process.")
@@ -96,15 +103,14 @@ class BTOON_OP_SetContour(bpy.types.Operator):
             mat.use_backface_culling = True
         assert mat is not None
 
-        contour_group_name = "Contour"
-        object = bpy.context.object
+        for object in bpy.context.selected_objects:
+            add_vertex_group(object, contour_group_name)
+            add_solidify_modifier(object, -0.01, True, False, 1, shell_vertex_group=contour_group_name)
 
-        add_vertex_group(object, contour_group_name)
-        add_solidify_modifier(object, -0.01, True, False, 1, shell_vertex_group=contour_group_name)
+            object.data.materials.append(mat)
 
-        object.data.materials.append(mat)
+            self.report({'INFO'}, "Set contour for {}.".format(object.name))
 
-        self.report({'INFO'}, "Set contour.")
         return {'FINISHED'}
 
 
