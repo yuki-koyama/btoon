@@ -5,7 +5,7 @@ bl_info = {
     "author": "Yuki Koyama",
     "version": (0, 0),
     "blender": (2, 83, 0),
-    "location": "Shader Editor, Compositor, Texture Node Editor > Node",
+    "location": "TODO",
     "description": "Toon shading",
     "warning": "",
     "support": "TESTING",
@@ -80,8 +80,8 @@ def add_vertex_group(mesh_object: bpy.types.Object, name: str = "Group") -> bpy.
 class BTOON_OP_SetContour(bpy.types.Operator):
 
     bl_idname = "node.set_contour"
-    bl_label = "TODO"
-    bl_description = "TODO"
+    bl_label = "Set Contour"
+    bl_description = "Set contours to the selected objects."
     bl_options = {"REGISTER", "UNDO"}
 
     def execute(self, context: bpy.types.Context):
@@ -122,7 +122,6 @@ def menu_func(self, context: bpy.types.Context) -> None:
 classes = [
     BTOON_OP_SetContour,
 ]
-
 
 
 def register():
