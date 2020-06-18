@@ -25,7 +25,8 @@ This is a mesh-based technique to rendering contours, where meshes are duplicate
 
 #### Usage
 
-(TODO)
+- Select target objects
+- `3D Viewport` > `Object` > `BToon Utilities` > `Set Contours`
 
 ### Future Work
 
