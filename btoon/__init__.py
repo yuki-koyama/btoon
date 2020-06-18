@@ -1,4 +1,6 @@
 import bpy
+from typing import Tuple
+
 
 bl_info = {
     "name": "BToon",
@@ -74,6 +76,24 @@ def add_vertex_group(mesh_object: bpy.types.Object, name: str = "Group") -> bpy.
     vertex_group = mesh_object.vertex_groups.new(name=name)
 
     return vertex_group
+
+
+def build_emission_nodes(node_tree: bpy.types.NodeTree,
+                         color: Tuple[float, float, float] = (0.0, 0.0, 0.0),
+                         strength: float = 1.0) -> None:
+    '''
+    https://docs.blender.org/api/current/bpy.types.ShaderNodeEmission.html
+    '''
+    output_node = node_tree.nodes.new(type='ShaderNodeOutputMaterial')
+    emission_node = node_tree.nodes.new(type='ShaderNodeEmission')
+
+    output_node.location[0] += 100.0
+    emission_node.location[0] -= 100.0
+
+    emission_node.inputs["Color"].default_value = color + (1.0, )
+    emission_node.inputs["Strength"].default_value = strength
+
+    node_tree.links.new(emission_node.outputs['Emission'], output_node.inputs['Surface'])
 # ------------------------------------------------------------------------------
 
 
@@ -99,8 +119,9 @@ class BTOON_OP_set_contour(bpy.types.Operator):
             print("BToon: Skip the material creation process.")
             mat = bpy.data.materials[mat_name]
         else:
-            mat = add_material(mat_name, use_nodes=True)
+            mat = add_material(mat_name, use_nodes=True, make_node_tree_empty=True)
             mat.use_backface_culling = True
+            build_emission_nodes(mat.node_tree, color=(0.05, 0.02, 0.02))
         assert mat is not None
 
         for object in context.selected_objects:
