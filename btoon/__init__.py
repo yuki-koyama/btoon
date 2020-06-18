@@ -146,8 +146,8 @@ def add_clouds_texture(name: str = "Clouds Texture",
 
 class BTOON_OP_set_contour(bpy.types.Operator):
 
-    bl_idname = "btoon.set_contour"
-    bl_label = "Set Contour"
+    bl_idname = "btoon.set_contours"
+    bl_label = "Set Contours"
     bl_description = "Set contours to the selected objects"
     bl_options = {"REGISTER", "UNDO"}
 
