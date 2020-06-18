@@ -8,7 +8,7 @@ bl_info = {
     "version": (0, 0),
     "blender": (2, 83, 0),
     "location": "TODO",
-    "description": "Toon shading utilities.",
+    "description": "Toon shading utilities",
     "warning": "",
     "support": "TESTING",
     "wiki_url": "https://github.com/yuki-koyama/btoon",
@@ -148,7 +148,7 @@ class BTOON_OP_set_contour(bpy.types.Operator):
 
     bl_idname = "btoon.set_contour"
     bl_label = "Set Contour"
-    bl_description = "Set contours to the selected objects."
+    bl_description = "Set contours to the selected objects"
     bl_options = {"REGISTER", "UNDO"}
 
     def execute(self, context: bpy.types.Context):
