@@ -77,7 +77,7 @@ def add_vertex_group(mesh_object: bpy.types.Object, name: str = "Group") -> bpy.
 # ------------------------------------------------------------------------------
 
 
-class BTOON_OP_SetContour(bpy.types.Operator):
+class BTOON_OP_set_contour(bpy.types.Operator):
 
     bl_idname = "btoon.set_contour"
     bl_label = "Set Contour"
@@ -114,26 +114,38 @@ class BTOON_OP_SetContour(bpy.types.Operator):
         return {'FINISHED'}
 
 
-def menu_func(self, context: bpy.types.Context) -> None:
-    self.layout.separator()
-    self.layout.operator(BTOON_OP_SetContour.bl_idname)
-
-
-classes = [
-    BTOON_OP_SetContour,
+op_classes = [
+    BTOON_OP_set_contour,
 ]
 
 
+class BTOON_MT_show_menu(bpy.types.Menu):
+    bl_idname = "BTOON_MT_show_menu"
+    bl_label = "BToon Utilities"
+    bl_description = "Toon shading utilities"
+
+    def draw(self, context: bpy.types.Context) -> None:
+        for op_class in op_classes:
+            self.layout.operator(op_class.bl_idname)
+
+
+def menu_func(self, context: bpy.types.Context) -> None:
+    self.layout.separator()
+    self.layout.menu(BTOON_MT_show_menu.bl_idname)
+
+
 def register():
-    for cls in classes:
-        bpy.utils.register_class(cls)
+    bpy.utils.register_class(BTOON_MT_show_menu)
+    for op_class in op_classes:
+        bpy.utils.register_class(op_class)
     bpy.types.VIEW3D_MT_object.append(menu_func)
 
 
 def unregister():
+    bpy.utils.unregister_class(BTOON_MT_show_menu)
+    for op_class in op_classes:
+        bpy.utils.unregister_class(op_class)
     bpy.types.VIEW3D_MT_object.remove(menu_func)
-    for cls in classes:
-        bpy.utils.unregister_class(cls)
 
 
 if __name__ == "__main__":
