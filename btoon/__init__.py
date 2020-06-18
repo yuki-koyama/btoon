@@ -6,7 +6,7 @@ bl_info = {
     "version": (0, 0),
     "blender": (2, 83, 0),
     "location": "TODO",
-    "description": "Toon shading",
+    "description": "Toon shading utilities.",
     "warning": "",
     "support": "TESTING",
     "wiki_url": "https://github.com/yuki-koyama/btoon",
@@ -79,7 +79,7 @@ def add_vertex_group(mesh_object: bpy.types.Object, name: str = "Group") -> bpy.
 
 class BTOON_OP_SetContour(bpy.types.Operator):
 
-    bl_idname = "node.set_contour"
+    bl_idname = "btoon.set_contour"
     bl_label = "Set Contour"
     bl_description = "Set contours to the selected objects."
     bl_options = {"REGISTER", "UNDO"}
@@ -90,7 +90,7 @@ class BTOON_OP_SetContour(bpy.types.Operator):
         mat_name = "BToon Contour"
 
         if not context.selected_objects:
-            self.report({'INFO'}, "No objects are selected.")
+            self.report({'WARNING'}, "No objects are selected.")
 
             return {'FINISHED'}
 
