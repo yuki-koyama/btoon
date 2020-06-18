@@ -66,6 +66,27 @@ def add_solidify_modifier(mesh_object: bpy.types.Object,
     modifier.rim_vertex_group = rim_vertex_group
 
 
+def add_displace_modifier(mesh_object: bpy.types.Object,
+                          texture_name: str,
+                          vertex_group: str = "",
+                          mid_level: float = 0.5,
+                          strength: float = 1.0) -> None:
+    '''
+    https://docs.blender.org/api/current/bpy.types.DisplaceModifier.html
+    '''
+
+    modifier = mesh_object.modifiers.new(name="Displace", type='DISPLACE')
+
+    modifier.mid_level = mid_level
+    modifier.strength = strength
+
+    # TODO: Check whether texture_name is properly defined
+    modifier.texture = bpy.data.textures[texture_name]
+
+    # TODO: Check whether vertex_group is either empty or defined
+    modifier.vertex_group = vertex_group
+
+
 # https://docs.blender.org/api/current/bpy.types.VertexGroups.html
 # https://docs.blender.org/api/current/bpy.types.VertexGroup.html
 def add_vertex_group(mesh_object: bpy.types.Object, name: str = "Group") -> bpy.types.VertexGroup:
@@ -94,6 +115,32 @@ def build_emission_nodes(node_tree: bpy.types.NodeTree,
     emission_node.inputs["Strength"].default_value = strength
 
     node_tree.links.new(emission_node.outputs['Emission'], output_node.inputs['Surface'])
+
+
+def add_clouds_texture(name: str = "Clouds Texture",
+                       size: float = 0.25,
+                       depth: int = 2,
+                       nabla: float = 0.025,
+                       brightness: float = 1.0,
+                       contrast: float = 1.0) -> bpy.types.CloudsTexture:
+    '''
+    https://docs.blender.org/api/current/bpy.types.BlendDataTextures.html
+    https://docs.blender.org/api/current/bpy.types.Texture.html
+    https://docs.blender.org/api/current/bpy.types.CloudsTexture.html
+    '''
+
+    # TODO: Check whether the name is already used or not
+
+    tex = bpy.data.textures.new(name, type='CLOUDS')
+
+    tex.noise_scale = size
+    tex.noise_depth = depth
+    tex.nabla = nabla
+
+    tex.intensity = brightness
+    tex.contrast = contrast
+
+    return tex
 # ------------------------------------------------------------------------------
 
 
@@ -106,7 +153,8 @@ class BTOON_OP_set_contour(bpy.types.Operator):
 
     def execute(self, context: bpy.types.Context):
 
-        contour_group_name = "Contour"
+        contour_group_name = "BToon Contour"
+        contour_noise_name = "BToon Contour Displace Noise"
         mat_name = "BToon Contour"
 
         if not context.selected_objects:
@@ -125,9 +173,13 @@ class BTOON_OP_set_contour(bpy.types.Operator):
             build_emission_nodes(mat.node_tree, color=(0.05, 0.02, 0.02))
         assert mat is not None
 
+        if not contour_noise_name in bpy.data.textures:
+            add_clouds_texture(contour_noise_name, brightness=0.5)
+
         for object in context.selected_objects:
             add_vertex_group(object, contour_group_name)
             add_solidify_modifier(object, -0.01, True, False, 1, shell_vertex_group=contour_group_name)
+            add_displace_modifier(object, texture_name=contour_noise_name, vertex_group=contour_group_name, mid_level=0.0, strength=-0.05)
 
             object.data.materials.append(mat)
 
