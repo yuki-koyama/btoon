@@ -121,6 +121,7 @@ class BTOON_OP_set_contour(bpy.types.Operator):
         else:
             mat = add_material(mat_name, use_nodes=True, make_node_tree_empty=True)
             mat.use_backface_culling = True
+            mat.shadow_method = 'NONE'
             build_emission_nodes(mat.node_tree, color=(0.05, 0.02, 0.02))
         assert mat is not None
 
