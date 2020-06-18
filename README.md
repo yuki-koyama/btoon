@@ -28,6 +28,11 @@ This is a mesh-based technique to rendering contours, where meshes are duplicate
 - Select target objects
 - `3D Viewport` > `Object` > `BToon Utilities` > `Set Contours`
 
+#### Implementation
+
+- It applies `Solidify` and `Displace` modifiers to the selected objects.
+- An emission-based material with backface culling enabled is created and set to contours.
+
 ### Future Work
 
 - Utilities for composition-based contour rendering
