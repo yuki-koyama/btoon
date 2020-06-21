@@ -1,4 +1,5 @@
 import bpy
+import os
 from typing import Tuple
 
 
@@ -141,6 +142,26 @@ def add_clouds_texture(name: str = "Clouds Texture",
     tex.contrast = contrast
 
     return tex
+
+
+def append_material(blend_file_path: str, material_name: str) -> bool:
+    '''
+    https://docs.blender.org/api/current/bpy.types.BlendDataLibraries.html
+    '''
+
+    # Load the library file
+    with bpy.data.libraries.load(blend_file_path, link=False) as (data_from, data_to):
+        # Check whether the specified material exists in the blend file
+        if material_name in data_from.materials:
+            # Append the material and return True
+            data_to.materials = [material_name]
+            return True
+        else:
+            # If the material is not found, return False without doing anything
+            return False
+
+    # TODO: Handle the exception of not being able to load the library file
+    # TODO: Remove the linked library from byp.data.libraries
 # ------------------------------------------------------------------------------
 
 
@@ -158,20 +179,21 @@ class BTOON_OP_set_contour(bpy.types.Operator):
         mat_name = "BToon Contour"
 
         if not context.selected_objects:
-            self.report({'WARNING'}, "No objects are selected.")
+            self.report({'WARNING'}, "BToon: No objects are selected.")
 
             return {'FINISHED'}
 
-        mat = None
         if mat_name in bpy.data.materials:
-            print("BToon: Skip the material creation process.")
-            mat = bpy.data.materials[mat_name]
+            self.report({'INFO'}, "BToon: The material append process is skipped since {} already exists.".format(mat_name))
         else:
-            mat = add_material(mat_name, use_nodes=True, make_node_tree_empty=True)
-            mat.use_backface_culling = True
-            mat.shadow_method = 'NONE'
-            build_emission_nodes(mat.node_tree, color=(0.05, 0.02, 0.02))
-        assert mat is not None
+            blend_file_path = os.path.dirname(os.path.abspath(__file__)) + "/library.blend"
+            append_material(blend_file_path, mat_name)
+
+            assert mat_name in bpy.data.materials
+
+            self.report({'INFO'}, "BToon: A contour material named {} is appended.".format(mat_name))
+
+        mat = bpy.data.materials[mat_name]
 
         if not contour_noise_name in bpy.data.textures:
             add_clouds_texture(contour_noise_name, brightness=0.5)
@@ -183,7 +205,7 @@ class BTOON_OP_set_contour(bpy.types.Operator):
 
             object.data.materials.append(mat)
 
-            self.report({'INFO'}, "Set contour for {}.".format(object.name))
+            self.report({'INFO'}, "BToon: The contour for {} is set.".format(object.name))
 
         return {'FINISHED'}
 
