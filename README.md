@@ -6,7 +6,7 @@ Blender addon for toon rendering.
 
 ## Toon Shading
 
-### BToon Skin
+### BToon Skin Material
 
 #### Description
 
