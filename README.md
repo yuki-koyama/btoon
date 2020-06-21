@@ -2,6 +2,20 @@
 
 Blender addon for toon rendering.
 
+![](./docs/teaser.jpg)
+
+## Toon Shading
+
+### BToon Skin
+
+#### Description
+
+![](./docs/btoon-skin.png)
+
+#### Usage
+
+(TODO)
+
 ## Contour Rendering
 
 ### Approach 1: Mesh Displacement and Culling
