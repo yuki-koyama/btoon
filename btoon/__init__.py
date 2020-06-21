@@ -191,7 +191,7 @@ class BTOON_OP_set_contours(bpy.types.Operator):
 
             assert mat_name in bpy.data.materials
 
-            self.report({'INFO'}, "BToon: A contour material named {} is appended.".format(mat_name))
+            self.report({'INFO'}, "BToon: A material named {} is appended.".format(mat_name))
 
         mat = bpy.data.materials[mat_name]
 
@@ -210,8 +210,45 @@ class BTOON_OP_set_contours(bpy.types.Operator):
         return {'FINISHED'}
 
 
+class BTOON_OP_append_skin_material(bpy.types.Operator):
+
+    bl_idname = "btoon.append_skin_material"
+    bl_label = "Append Skin Material"
+    bl_description = "Append the skin material to the selected objects"
+    bl_options = {"REGISTER", "UNDO"}
+
+    def execute(self, context: bpy.types.Context):
+
+        mat_name = "BToon Skin"
+
+        if not context.selected_objects:
+            self.report({'WARNING'}, "BToon: No objects are selected.")
+
+            return {'FINISHED'}
+
+        if mat_name in bpy.data.materials:
+            self.report({'INFO'}, "BToon: The material append process is skipped since {} already exists.".format(mat_name))
+        else:
+            blend_file_path = os.path.dirname(os.path.abspath(__file__)) + "/library.blend"
+            append_material(blend_file_path, mat_name)
+
+            assert mat_name in bpy.data.materials
+
+            self.report({'INFO'}, "BToon: A material named {} is appended.".format(mat_name))
+
+        mat = bpy.data.materials[mat_name]
+
+        for object in context.selected_objects:
+            object.data.materials.append(mat)
+
+            self.report({'INFO'}, "BToon: The skin material is appended to {}.".format(object.name))
+
+        return {'FINISHED'}
+
+
 op_classes = [
     BTOON_OP_set_contours,
+    BTOON_OP_append_skin_material,
 ]
 
 
