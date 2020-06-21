@@ -14,12 +14,11 @@ Blender addon for toon rendering.
 This is a mesh-based technique to rendering contours, where meshes are duplicated, flipped, and then displaced outside.
 
 - Pros
-  - Thickness can be controlled using textures
-  - Contours can be displaced in the viewport
-  - The result can be easily reproduced in other real-time rendering environment such as Unity.
+  - Thickness can be controlled using textures.
+  - Contours can be displaced in the viewport.
+  - The same effect can be easily reproduced in other real-time rendering environment such as Unity.
   - ...
 - Cons
-  - This technique is not compatible with Cycles
   - Ridges, valleys, and suggestive contours are not supported.
   - ...
 
