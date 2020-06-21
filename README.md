@@ -10,11 +10,14 @@ Blender addon for toon rendering.
 
 #### Description
 
+This is a simple toon material designed for skins. It has controllable rim lighting, SSS, and specular effects. This material only works with EEVEE.
+
 ![](./docs/btoon-skin.png)
 
 #### Usage
 
-(TODO)
+- Select target objects
+- `3D Viewport` > `Object` > `BToon Utilities` > `Append Skin Material`
 
 ## Contour Rendering
 
