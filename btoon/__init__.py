@@ -165,7 +165,7 @@ def append_material(blend_file_path: str, material_name: str) -> bool:
 # ------------------------------------------------------------------------------
 
 
-class BTOON_OP_set_contour(bpy.types.Operator):
+class BTOON_OP_set_contours(bpy.types.Operator):
 
     bl_idname = "btoon.set_contours"
     bl_label = "Set Contours"
@@ -211,7 +211,7 @@ class BTOON_OP_set_contour(bpy.types.Operator):
 
 
 op_classes = [
-    BTOON_OP_set_contour,
+    BTOON_OP_set_contours,
 ]
 
 
