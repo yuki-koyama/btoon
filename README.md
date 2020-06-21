@@ -40,3 +40,8 @@ This is a mesh-based technique to rendering contours, where meshes are duplicate
 ## How to Install
 
 (TODO)
+
+## License
+
+- The Python codes (using Blender Python APIs) are licensed under GPLv3.
+- The `.blend` library files are licensed under CC BY 4.0. (However, you do not need the BY credit when using the libraries through this addon.)
