@@ -6,15 +6,15 @@ from typing import Tuple
 bl_info = {
     "name": "BToon",
     "author": "Yuki Koyama",
-    "version": (0, 0),
+    "version": (0, 1),
     "blender": (2, 83, 0),
-    "location": "TODO",
+    "location": "View3D > Object > BToon Utilities",
     "description": "Toon shading utilities",
     "warning": "",
     "support": "TESTING",
     "wiki_url": "https://github.com/yuki-koyama/btoon",
     "tracker_url": "https://github.com/yuki-koyama/btoon/issues",
-    "category": "Node"
+    "category": "Material"
 }
 
 
